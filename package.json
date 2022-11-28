@@ -12,6 +12,7 @@
     "@types/core-js": "^2.5.5",
     "@types/regenerator-runtime": "^0.13.1",
     "core-js": "^3.26.1",
+    "fractional": "^1.0.0",
     "lodash-es": "^4.17.21",
     "regenerator-runtime": "^0.13.11"
   },
