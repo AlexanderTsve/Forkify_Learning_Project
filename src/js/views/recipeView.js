@@ -6,6 +6,22 @@ class RecipeView extends View {
   _errorMessage = 'We could not find that recipe. Please, try another one!';
   _message = '';
 
+  addHandlerRender(handler) {
+    ['hashchange', 'load'].forEach(e => window.addEventListener(e, handler));
+  }
+
+  addHandlerUpdateServings(handler) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--update-servings');
+      if (!btn) {
+        return;
+      }
+      const updateTo = Number(btn.dataset.updateTo);
+      if (updateTo > 0) {
+        handler(updateTo);
+      }
+    });
+  }
   _generateMarkup() {
     return `<figure class="recipe__fig">
     <img src='${this._data.image}' alt=${
@@ -36,12 +52,16 @@ class RecipeView extends View {
       <span class="recipe__info-text">servings</span>
 
       <div class="recipe__info-buttons">
-        <button class="btn--tiny btn--increase-servings">
+        <button class="btn--tiny btn--update-servings" data-update-to='${
+          this._data.servings - 1
+        }'>
           <svg>
             <use href="${icons}#icon-minus-circle"></use>
           </svg>
         </button>
-        <button class="btn--tiny btn--increase-servings">
+        <button class="btn--tiny btn--update-servings" data-update-to='${
+          this._data.servings + 1
+        }'>
           <svg>
             <use href="${icons}#icon-plus-circle"></use>
           </svg>
@@ -85,9 +105,7 @@ class RecipeView extends View {
     </a>
   </div>`;
   }
-  addHandlerRender(handler) {
-    ['hashchange', 'load'].forEach(e => window.addEventListener(e, handler));
-  }
+
   _generateMarkupIngredient(ingredient) {
     return `<li class="recipe__ingredient">
         <svg class="recipe__icon">
