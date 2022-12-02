@@ -8,14 +8,24 @@ const timeout = function (s) {
     }, s * 1000);
   });
 };
-export const getJSON = async function (url) {
+
+export const AJAX = async function (url, uploadData = undefined) {
   try {
-    const response = await Promise.race([fetch(url), timeout(TIMEOUT_SEC)]);
-    const currentData = await response.json();
-    if (!response.ok) {
-      throw new Error(`${currentData.message} (${response.status})`);
+    const fetchPro = uploadData
+      ? fetch(url, {
+          method: 'Post',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(uploadData),
+        })
+      : fetch(url);
+    const res = await Promise.race([fetchPro, timeout(TIMEOUT_SEC)]);
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(`${data.message} (${res.status})`);
     }
-    return currentData;
+    return data;
   } catch (err) {
     throw err;
   }
